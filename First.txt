@@ -1,0 +1,206 @@
+from datetime import datetime
+import openpyxl
+import fnmatch
+import os
+import tkinter as tk
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
+
+
+def countDailyFile(day,processName,Month):
+    if processName == 'RTB':
+        path = 'C:\\Users\\aquibf632\\Desktop\\RTB'
+    elif processName == 'VAT':
+        path = 'C:\\Users\\aquibf632\\Desktop\\VAT'
+    elif processName == 'WAF':
+        path = 'C:\\Users\\aquibf632\\Desktop\\WAF'
+    elif processName =='AutoOnboarding':
+        path = 'C:\\Users\\aquibf632\\Desktop\\AutoOnboarding'
+    
+    if Month == 'november':
+        month = 11
+    elif Month == 'december':
+        month = 12
+    
+    listOfFiles = fnmatch.filter(os.listdir(path),"*.txt")
+    count = 0
+    for file in listOfFiles:
+        currentDate = str(day)+'-'+str(month)+'-'+str(datetime.now().year)
+        fileCreationDate = datetime.date(datetime.fromtimestamp(os.stat(path+"\\"+file).st_mtime)).strftime("%d-%m-%Y")
+        #iterator = iterator + 1 
+        if currentDate == fileCreationDate : 
+                count = count + 1 
+    return count
+
+
+
+
+def updateExcelTwo(processName,Month):
+    wb = openpyxl.load_workbook("C:\\Users\\aquibf632\\Desktop\\genesisTwo\\"+Month+"\\"+processName+".xlsx")
+    sheet = wb.get_sheet_by_name("Sheet1") 
+    lastDay = str(sheet.cell(row=sheet.max_row,column=3).value)
+    currentDay = str(datetime.now().day)
+    lastRow = sheet.max_row
+    if (lastDay < currentDay):
+        for i in range(int(lastDay)+1,int(currentDay)+1):
+            lastRow = lastRow + 1
+            sheet.cell(row=lastRow,column=1).value = datetime.now().year
+            sheet.cell(row=lastRow,column=2).value = datetime.now().month
+            sheet.cell(row=lastRow,column=3).value = i
+            sheet.cell(row=lastRow,column=4).value = countDailyFile(i,processName,Month)
+            wb.save("C:\\Users\\aquibf632\\Desktop\\genesisTwo\\"+Month+"\\"+processName+".xlsx")
+    else:
+        sheet.cell(row=lastRow,column=1).value = datetime.now().year
+        sheet.cell(row=lastRow,column=2).value = datetime.now().month
+        sheet.cell(row=lastRow,column=3).value = currentDay
+        sheet.cell(row=lastRow,column=4).value = countDailyFile(currentDay,processName,Month)
+        wb.save("C:\\Users\\aquibf632\\Desktop\\genesisTwo\\"+Month+"\\"+processName+".xlsx")
+
+
+
+def totalIteration(processName,Month):
+    updateExcelTwo(processName,Month)
+    totalIteration = 0
+    wb = openpyxl.load_workbook("C:\\Users\\aquibf632\\Desktop\\genesisTwo\\"+Month+"\\"+processName+".xlsx")
+    sheet = wb.get_sheet_by_name("Sheet1")
+    for i in range(2,sheet.max_row+1):
+        totalIteration = totalIteration + sheet.cell(row=i,column=4).value
+    return totalIteration
+
+def updateExcelOne(processName,Month):
+    wb = openpyxl.load_workbook("C:\\Users\\aquibf632\\Desktop\\genesisOne\\"+Month+".xlsx")
+    sheet = wb.get_sheet_by_name("Sheet1")
+    for i in range(2,sheet.max_row+1):
+        if(sheet.cell(row=i,column=1).value == processName):
+            sheet.cell(row=i,column=2).value = totalIteration(processName,Month)
+            wb.save("C:\\Users\\aquibf632\\Desktop\\genesisOne\\"+Month+".xlsx")
+            print('Excel Two updated!')
+                    
+#updateExcelOne('RTB','december')
+
+LARGE_FONT= ("Verdana", 12)
+
+
+class SeaofBTCapp(tk.Tk):
+
+    def __init__(self, *args, **kwargs):
+        
+        tk.Tk.__init__(self, *args, **kwargs)
+        container = tk.Frame(self)
+
+        container.pack(side="top", fill="both", expand = True)
+
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+
+        self.frames = {}
+
+        for F in (StartPage, PageOne, PageTwo):
+
+            frame = F(container, self)
+
+            self.frames[F] = frame
+
+            frame.grid(row=0, column=0, sticky="nsew")
+
+        self.show_frame(StartPage)
+
+    def show_frame(self, cont):
+
+        frame = self.frames[cont]
+        frame.tkraise()
+
+        
+class StartPage(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self,parent)
+        label = tk.Label(self, text="Hey There!", font=LARGE_FONT)
+        label.pack(pady=50,padx=50)
+
+        button = tk.Button(self, text="November,2019",
+                            command=lambda: controller.show_frame(PageOne))
+        button.pack(side='left',pady=10,padx=10)
+
+        button2 = tk.Button(self, text="December,2019",
+                            command=lambda: controller.show_frame(PageTwo))
+        button2.pack(side='left',pady=10,padx=10)
+        
+        
+
+
+class PageOne(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        updateExcelOne('RTB','november')
+        updateExcelOne('VAT','november')
+        updateExcelOne('WAF','november')
+        updateExcelOne('AutoOnboarding','november')
+        wb = openpyxl.load_workbook("C:\\Users\\aquibf632\\Desktop\\genesisOne\\november.xlsx")
+        sheet = wb.get_sheet_by_name("Sheet1")
+        name=[]
+        iteration = []
+        for i in range(2,sheet.max_row+1):
+            name.append(sheet.cell(row=i,column=1).value)
+            iteration.append(sheet.cell(row=i,column=2).value)
+        count = 0
+        for i in iteration:
+            if (int(i)>0):
+                count = count + 1
+        if (count == 0):
+            label = tk.Label(self, text="Nothing there to show!", font=LARGE_FONT)
+            label.pack(pady=50,padx=50)
+        else:
+            f = Figure(figsize=(5,5),dpi=100)
+            a = f.add_subplot(111)
+            a.bar(name,iteration)
+
+            canvas = FigureCanvasTkAgg(f , self)
+            canvas.get_tk_widget().pack(side='bottom',fill='both', expand=True)
+
+        button1 = tk.Button(self, text="Home",
+                        command=lambda: controller.show_frame(StartPage))
+        button1.pack(side='left',pady=10,padx=10)
+
+class PageTwo(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        updateExcelOne('RTB','december')
+        updateExcelOne('VAT','december')
+        updateExcelOne('WAF','december')
+        updateExcelOne('AutoOnboarding','december')
+        wb = openpyxl.load_workbook("C:\\Users\\aquibf632\\Desktop\\genesisOne\\december.xlsx")
+        sheet = wb.get_sheet_by_name("Sheet1")
+        name=[]
+        iteration = []
+        for i in range(2,sheet.max_row+1):
+            name.append(sheet.cell(row=i,column=1).value)
+            iteration.append(sheet.cell(row=i,column=2).value)
+        count  = 0
+        for i in iteration:
+            if (int(i)>0):
+                count = count + 1
+        if (count == 0):
+            label = tk.Label(self, text="Nothing there to show!", font=LARGE_FONT)
+            label.pack(pady=50,padx=50)
+        else :
+            f = Figure(figsize=(5,5),dpi=100)
+            a = f.add_subplot(111)
+            a.bar(name,iteration)
+
+            canvas = FigureCanvasTkAgg(f , self)
+            canvas.get_tk_widget().pack(side='bottom', fill='both', expand=True)
+
+        button1 = tk.Button(self, text=" Home",
+                             command=lambda: controller.show_frame(StartPage))
+        button1.pack(side='left',pady=10,padx=10)
+
+
+app = SeaofBTCapp()
+app.mainloop()
+
+
+
