@@ -1,0 +1,43 @@
+ADDACS-Code0                    :  P:\Gateshead Ops\NS36 Workaround\CIM\ADDACS\0\0FilesArchive
+
+ADDACS-Code1	                :  P:\Gateshead Ops\NS36 Workaround\CIM\ADDACS\1\1FilesArchive
+
+ADDACS-Code2                    :  (excel) 
+ 
+ADDACS-CodeB                    :  (excel)
+
+ADDACS-CodeAuddis               :  P:\Gateshead Ops\NS36 Workaround\CIM\ADDACS\Auddis\AuddisFilesArchive
+
+ADDACS-CodeCORPORATE            :  P:\Gateshead Ops\NS36 Workaround\CIM\ADDACS\CORPORATE\CORPORATEFilesArchive
+
+Alerts                          :   P:\Gateshead Ops\NS36 Workaround\CIM\Alerts\AlertsFilesArchive
+
+ApproveWAF                      :   (Archived)
+
+AutoCustomerOnboarding          :   P:\Applications_XML\AutoCustomerOnboardingFilesArchive
+
+AutoOutletCloning               :  P:\Gateshead Ops\NS36 Workaround\CIM\AutoOutletCloning\AutoOutletCloningFilesArchive
+
+BankAddressChange               :  P:\Gateshead Ops\NS36 Workaround\CIM\BankAddress\BankAddressChangeFilesArchive
+
+BulkTerminalOrders              :  (No longer in use )
+
+ContractExtensions              :  (excel , no longer in use)
+
+InstallsRTBMultipleTerminal     :  P:\Gateshead Ops\NS36 Workaround\CIM\InstallsRTBMultipleTerminal\InstallsRTBMultipleTerminalFilesArchive
+
+ManualPayments                  : P:\Gateshead Ops\NS36 Workaround\CIM\ManualPayments\ManualPaymentsFilesArchive
+
+MBD                             : P:\Gateshead Ops\NS36 Workaround\CIM\MBD\MBDFilesArchive
+ 
+RateAmendments                  : P:\Gateshead Ops\NS36 Workaround\CIM\RateAmendments\RateAmendmentsFilesArchive
+
+RemovalsRTB                     : P:\Gateshead Ops\NS36 Workaround\CIM\RTB - Removal\RemovalsRTBFilesArchive
+
+SRClosures                      : P:\Gateshead Ops\NS36 Workaround\CIM\SRClosures\SRClosuresFilesArchive
+
+TallyRollsCharges               : P:\Gateshead Ops\NS36 Workaround\CIM\Tally Roll\TallyRollsChargeFilesArchive
+
+TerminalRemovals                : (excel)
+
+WAF                             : P:\Gateshead Ops\NS36 Workaround\CIM\WAF\WAFFilesArchive
