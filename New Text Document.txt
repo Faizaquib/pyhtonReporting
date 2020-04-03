@@ -1,0 +1,33 @@
+import openpyxl
+loc = r"C:\Users\Faiz's\Desktop\Trial.xlsx"
+wb = openpyxl.load_workbook(loc)
+sheet = wb.active
+maxRow = sheet.max_row
+for i in range(2,maxRow+1):
+    pc1 = sheet.cell(row=i,column=8).value
+    pc2 = sheet.cell(row=i,column=9).value
+    finalPc = pc1 + " " + pc2
+    sheet.cell(row=i,column=8).value = finalPc
+    sheet.cell(row=i,column=9).value = " "
+
+def runloop():
+    maxRow = sheet.max_row
+    for i in range(2,maxRow+1):
+        if (sheet.cell(row=i,column=1).value == sheet.cell(row=i+1,column=1).value):
+            if (sheet.cell(row=i,column=2).value == sheet.cell(row=i+1,column=2).value):
+                if (sheet.cell(row=i,column=3).value == sheet.cell(row=i+1,column=3).value):
+                    if (sheet.cell(row=i,column=10).value == sheet.cell(row=i+1,column=10).value):
+                        if (sheet.cell(row=i,column=11).value == sheet.cell(row=i+1,column=11).value):
+                            if sheet.cell(row=i,column=4).value is None:
+                                sheet.delete_rows(i)
+                                wb.save(loc)
+                                break
+                            elif sheet.cell(row=i+1,column=4).value is None :
+                                sheet.delete_rows(i+1)
+                                wb.save(loc)
+                                break
+                            
+for i in range(11):
+    runloop()
+wb.save(loc) 
+print("ho gai update!")
