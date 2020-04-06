@@ -30,5 +30,17 @@ for i in range(2,maxRow+1):
         print(i)
         sheet.cell(row=i,column=8).fill = redFill
         wb.save(loc)
-print("ho gai update")        
+print("ho gai update")      
+
+
+def extract_from_number_to_end(input_string):
+    output = input_string # return input if no number found
+    for char in input_string:
+        if char.isdigit():
+            pos = input_string.find(char)
+            output = input_string[:pos]
+            break #stop as we have found the first number
+    return output
+res = extract_from_number_to_end("Fa12 34iz")
+print(res)  
            
