@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[8]:
+# In[4]:
 
 
 from datetime import datetime
@@ -14,6 +14,8 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import numpy as np
 import time
+from openpyxl import Workbook
+from openpyxl import load_workbook
 
 def countDailyFile(day,processName,Month):
     if processName == 'RTB':
@@ -102,8 +104,9 @@ def countDailyFile(day,processName,Month):
     
 
 def updateExcelTwo(processName,Month):
-    wb = openpyxl.load_workbook(r'\\tsclient\\P\\Gateshead Ops\\NS36 Workaround\\CIM\\Team Members\\Faiz\\Reporting\\genesisTwo\\'+Month+'\\'+processName+'.xlsx')
-    sheet = wb["Sheet1"] 
+    
+    wb = load_workbook(r'\\tsclient\\P\\Gateshead Ops\\NS36 Workaround\\CIM\\Team Members\\Faiz\\Reporting\\genesisTwo'+'\\'+Month+'\\'+processName+'.xlsx')
+    sheet = wb.active 
     lastDay = str(sheet.cell(row=sheet.max_row,column=3).value)
     currentDay = str(datetime.now().day)
     currentMonth = datetime.now().month
@@ -152,6 +155,7 @@ def updateExcelTwo(processName,Month):
                 sheet.cell(row=lastRow,column=1).value = datetime.now().year
                 sheet.cell(row=lastRow,column=2).value = month
                 sheet.cell(row=lastRow,column=3).value = i
+                #print(i)
                 count , time = countDailyFile(i,processName,Month)
                 sheet.cell(row=lastRow,column=4).value = count
                 sheet.cell(row=lastRow,column=5).value = round(time/60,2)
@@ -161,12 +165,13 @@ def updateExcelTwo(processName,Month):
             sheet.cell(row=lastRow,column=1).value = datetime.now().year
             sheet.cell(row=lastRow,column=2).value = month
             sheet.cell(row=lastRow,column=3).value = currentDay
+            #print(currentDay)
             count , time = countDailyFile(currentDay,processName,Month)
             sheet.cell(row=lastRow,column=4).value = count
             sheet.cell(row=lastRow,column=5).value = round(time/60,2)
             wb.save(r'\\tsclient\\P\\Gateshead Ops\\NS36 Workaround\\CIM\\Team Members\\Faiz\\Reporting\\genesisTwo\\'+Month+'\\'+processName+'.xlsx')
-    if (processName=='TallyRollsCharges'):
-        print(str(month)+'/12...Modules Loaded')
+    #if (processName=='TallyRollsCharges'):
+       #print(str(month)+'/12...Modules Loaded')
     
 
 
@@ -174,7 +179,7 @@ def totalIteration(processName,Month):
     updateExcelTwo(processName,Month)
     totalIteration = 0
     wb = openpyxl.load_workbook(r'\\tsclient\\P\\Gateshead Ops\\NS36 Workaround\\CIM\\Team Members\\Faiz\\Reporting\\genesisTwo\\'+Month+'\\'+processName+'.xlsx')
-    sheet = wb["Sheet1"]
+    sheet = wb.active
     for i in range(2,sheet.max_row+1):
         totalIteration = totalIteration + sheet.cell(row=i,column=4).value
     return totalIteration
@@ -183,7 +188,7 @@ def totalTime(processName,Month):
     #pdateExcelTwo(processName,Month)
     totalTime = 0
     wb = openpyxl.load_workbook(r'\\tsclient\\P\\Gateshead Ops\\NS36 Workaround\\CIM\\Team Members\\Faiz\\Reporting\\genesisTwo\\'+Month+'\\'+processName+'.xlsx')
-    sheet = wb.get_sheet_by_name("Sheet1")
+    sheet = wb.active
     for i in range(2,sheet.max_row+1):
         val = sheet.cell(row=i,column=5).value
         totalTime = totalTime + int(0 if val is None else val)
@@ -193,7 +198,7 @@ def totalTime(processName,Month):
 
 def updateExcelOne(processName,Month):
     wb = openpyxl.load_workbook(r'\\tsclient\\P\\Gateshead Ops\\NS36 Workaround\\CIM\\Team Members\\Faiz\\Reporting\\genesisOne\\'+Month+'.xlsx')
-    sheet = wb["Sheet1"]
+    sheet = wb.active
     for i in range(2,sheet.max_row+1):
         if(sheet.cell(row=i,column=1).value == processName):
             sheet.cell(row=i,column=2).value = totalIteration(processName,Month)
@@ -255,8 +260,8 @@ def caller():
     print("codeauddis")
     updateExcelOne('ADDACS-CodeCORPORATE',month)
     print("codeCorporate")
-    updateExcelOne('Alerts',month)
-    print("alerts")
+    #updateExcelOne('Alerts',month)
+    #print("alerts")
     updateExcelOne('WAF',month)
     print("WAF")
     updateExcelOne('AutoOutletCloning',month)
@@ -265,12 +270,18 @@ def caller():
     print("rateamendments")
     updateExcelOne('RemovalsRTB',month)
     print("removalsRTB")
-    updateExcelOne('SRClosures',month)
-    print("SRClousre")
+    #updateExcelOne('SRClosures',month)
+    #print("SRClousre")
     updateExcelOne('TallyRollsCharges',month)
     print("TallyRollsCharges")
     #print(time.process_time() - start)
 caller()
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:
